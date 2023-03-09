@@ -23,6 +23,8 @@ WITH ppp AS(
     AVG(gross_amt+0.5*COALESCE(bo_amt,0) ) over (partition by T1.material order by T1.act_date ROWS BETWEEN 6 PRECEDING and 1 PRECEDING ) as mean6M
     FROM ppp T1
     LEFT JOIN bo T2 on T1.material = T2.material and T2.act_date = T1.act_date
+    LEFT JOIN [ivy.mm.dim.mtrl] T3 on T1.material= T3.material
+    WHERE T3.ms in ('01','41','91')
 )
 , pppboRank as (
     SELECT material, act_date, gross_amt, bo_amt, mean6M, 
